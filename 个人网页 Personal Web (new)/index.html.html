@@ -525,6 +525,50 @@
            【新增代码结束】个人照片区域样式
            ============================================ */
         
+        /* ============================================
+           【新增代码开始】技能标签样式
+           ============================================ */
+        
+        .skill-tag {
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .skill-tag:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.15);
+        }
+        
+        /* 技能标签进入动画 */
+        .skill-tag {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: skill-tag-enter 0.5s ease-out forwards;
+        }
+        
+        .skill-tag:nth-child(1) { animation-delay: 0.05s; }
+        .skill-tag:nth-child(2) { animation-delay: 0.1s; }
+        .skill-tag:nth-child(3) { animation-delay: 0.15s; }
+        .skill-tag:nth-child(4) { animation-delay: 0.2s; }
+        .skill-tag:nth-child(5) { animation-delay: 0.25s; }
+        .skill-tag:nth-child(6) { animation-delay: 0.3s; }
+        .skill-tag:nth-child(7) { animation-delay: 0.35s; }
+        .skill-tag:nth-child(8) { animation-delay: 0.4s; }
+        .skill-tag:nth-child(9) { animation-delay: 0.45s; }
+        .skill-tag:nth-child(10) { animation-delay: 0.5s; }
+        .skill-tag:nth-child(11) { animation-delay: 0.55s; }
+        
+        @keyframes skill-tag-enter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ============================================
+           【新增代码结束】技能标签样式
+           ============================================ */
+        
         /* Responsive */
         @media (max-width: 1024px) {
             .bento-grid {
@@ -638,12 +682,7 @@
                 </div>
             </div>
             
-            <!-- Scroll Indicator -->
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 scroll-indicator opacity-0">
-                <div class="w-6 h-10 rounded-full border-2 border-void-text/30 flex justify-center pt-2">
-                    <div class="w-1.5 h-3 bg-void-accent rounded-full animate-bounce"></div>
-                </div>
-            </div>
+        
         </section>
         
         <!-- About Section - Bento Grid -->
@@ -842,53 +881,56 @@
             </div>
         </section>
         
-        <!-- Skills Marquee Section -->
-        <section class="py-32 overflow-hidden" id="skills">
-            <div class="px-6 md:px-12 lg:px-24 mb-16">
-                <div class="max-w-7xl mx-auto reveal">
+        <!-- Skills Section -->
+        <section class="py-32 px-6 md:px-12 lg:px-24" id="skills">
+            <div class="max-w-7xl mx-auto">
+                <div class="reveal mb-16">
                     <span class="text-void-accent text-sm font-medium tracking-[0.2em] uppercase">Skills & Strengths</span>
                     <h2 class="text-5xl md:text-6xl font-bold mt-4">技能与优势</h2>
                 </div>
-            </div>
-            
-            <!-- Software Skills -->
-            <div class="marquee-container mb-6 reveal">
-                <div class="marquee-content">
-                    <div v-for="(skill, index) in profileData.softwareSkills" :key="'s1-'+index" class="marquee-item glass-strong text-void-accent">
-                        <i data-lucide="code-2" class="w-5 h-5"></i>
-                        {{ skill }}
-                    </div>
-                    <div v-for="(skill, index) in profileData.softwareSkills" :key="'s2-'+index" class="marquee-item glass-strong text-void-accent">
-                        <i data-lucide="code-2" class="w-5 h-5"></i>
-                        {{ skill }}
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Personality Traits - Reverse -->
-            <div class="marquee-container mb-6 reveal">
-                <div class="marquee-content-reverse">
-                    <div v-for="(trait, index) in profileData.personalityTraits" :key="'p1-'+index" class="marquee-item glass-strong text-void-purple">
-                        <i data-lucide="sparkles" class="w-5 h-5"></i>
-                        {{ trait }}
-                    </div>
-                    <div v-for="(trait, index) in profileData.personalityTraits" :key="'p2-'+index" class="marquee-item glass-strong text-void-purple">
-                        <i data-lucide="sparkles" class="w-5 h-5"></i>
-                        {{ trait }}
+                
+                <!-- Software Skills -->
+                <div class="reveal mb-8">
+                    <h3 class="text-lg font-medium text-void-text/60 mb-4 flex items-center gap-2">
+                        <i data-lucide="code-2" class="w-5 h-5 text-void-accent"></i>
+                        软件技能
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <div v-for="(skill, index) in profileData.softwareSkills" :key="'s-'+index" 
+                             class="skill-tag px-4 py-2 rounded-full glass-strong text-void-accent flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:bg-void-accent/10">
+                            <i data-lucide="code-2" class="w-4 h-4"></i>
+                            {{ skill }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Hobbies -->
-            <div class="marquee-container reveal">
-                <div class="marquee-content">
-                    <div v-for="(hobby, index) in profileData.hobbies" :key="'h1-'+index" class="marquee-item glass-strong text-pink-400">
-                        <i data-lucide="heart" class="w-5 h-5"></i>
-                        {{ hobby }}
+                
+                <!-- Personality Traits -->
+                <div class="reveal mb-8">
+                    <h3 class="text-lg font-medium text-void-text/60 mb-4 flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-void-purple"></i>
+                        性格特质
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <div v-for="(trait, index) in profileData.personalityTraits" :key="'p-'+index" 
+                             class="skill-tag px-4 py-2 rounded-full glass-strong text-void-purple flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:bg-void-purple/10">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            {{ trait }}
+                        </div>
                     </div>
-                    <div v-for="(hobby, index) in profileData.hobbies" :key="'h2-'+index" class="marquee-item glass-strong text-pink-400">
-                        <i data-lucide="heart" class="w-5 h-5"></i>
-                        {{ hobby }}
+                </div>
+                
+                <!-- Hobbies -->
+                <div class="reveal">
+                    <h3 class="text-lg font-medium text-void-text/60 mb-4 flex items-center gap-2">
+                        <i data-lucide="heart" class="w-5 h-5 text-pink-400"></i>
+                        兴趣爱好
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <div v-for="(hobby, index) in profileData.hobbies" :key="'h-'+index" 
+                             class="skill-tag px-4 py-2 rounded-full glass-strong text-pink-400 flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:bg-pink-400/10">
+                            <i data-lucide="heart" class="w-4 h-4"></i>
+                            {{ hobby }}
+                        </div>
                     </div>
                 </div>
             </div>
