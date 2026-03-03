@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘柯汝 | 产品运营与数据分析专家</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void-bg': '#0F172A',
+                        'void-text': '#F8FAFC',
+                        'void-accent': '#38BDF8',
+                        'void-purple': '#818CF8',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'marquee': 'marquee 30s linear infinite',
+                        'marquee-reverse': 'marquee-reverse 30s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        'marquee-reverse': {
+                            '0%': { transform: 'translateX(-50%)' },
+                            '100%': { transform: 'translateX(0%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: #0F172A;
+            color: #F8FAFC;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #38BDF8;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+            mix-blend-mode: difference;
+        }
+        
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s ease-out;
+        }
+        
+        .cursor.hover {
+            width: 50px;
+            height: 50px;
+            border-color: #818CF8;
+            background: rgba(129, 140, 248, 0.1);
+        }
+        
+        /* Noise Texture Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Glow Effects */
+        .glow {
+            box-shadow: 0 0 60px rgba(56, 189, 248, 0.3), 0 0 100px rgba(129, 140, 248, 0.2);
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 40px rgba(56, 189, 248, 0.5), 0 0 80px rgba(129, 140, 248, 0.3);
+        }
+        
+        /* Liquid Background */
+        .liquid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .liquid-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: blob-float 20s ease-in-out infinite;
+        }
+        
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #38BDF8, #818CF8);
+            top: -200px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+        
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #818CF8, #C084FC);
+            bottom: -150px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+        
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #C084FC, #38BDF8);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+        
+        @keyframes blob-float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+            50% {
+                transform: translate(-30px, 30px) scale(0.95);
+            }
+            75% {
+                transform: translate(-50px, -30px) scale(1.05);
+            }
+        }
+        
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .bento-item {
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bento-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 20px 60px rgba(56, 189, 248, 0.15);
+        }
+        
+        .bento-item.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .bento-item.wide {
+            grid-column: span 2;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #38BDF8 0%, #818CF8 50%, transparent 100%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 4rem;
+            opacity: 0.4;
+            transition: all 0.5s ease;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #0F172A;
+            border: 2px solid #38BDF8;
+            transform: translateX(-5px);
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item.active {
+            opacity: 1;
+        }
+        
+        .timeline-item.active::before {
+            background: #38BDF8;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+        }
+        
+        .timeline-item:hover {
+            opacity: 1;
+        }
+        
+        .timeline-item:hover ~ .timeline-item {
+            opacity: 0.2;
+        }
+        
+        .timeline-container:has(.timeline-item:hover) .timeline-item:not(:hover) {
+            opacity: 0.2;
+        }
+        
+        /* Project Cards */
+        .project-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .project-card:hover::before {
+            opacity: 1;
+        }
+        
+        .project-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 30px 80px rgba(56, 189, 248, 0.2);
+        }
+        
+        /* Marquee */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .marquee-content {
+            display: inline-flex;
+            animation: marquee 30s linear infinite;
+        }
+        
+        .marquee-content-reverse {
+            display: inline-flex;
+            animation: marquee-reverse 30s linear infinite;
+        }
+        
+        .marquee-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        /* Footer CTA */
+        .cta-text {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-text:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #38BDF8, #818CF8);
+            border-radius: 4px;
+        }
+        
+        /* Section Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .bento-item.large {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+            .cursor, .cursor-follower {
+                display: none;
+            }
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .bento-item.large,
+            .bento-item.wide {
+                grid-column: span 1;
+            }
+            .timeline {
+                padding-left: 2rem;
+            }
+            .timeline-item::before {
+                left: -2rem;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div id="app">
+        <!-- Custom Cursor -->
+        <div class="cursor" ref="cursor"></div>
+        <div class="cursor-follower" ref="cursorFollower"></div>
+        
+        <!-- Noise Overlay -->
+        <div class="noise-overlay"></div>
+        
+        <!-- Liquid Background -->
+        <div class="liquid-bg">
+            <div class="liquid-blob blob-1"></div>
+            <div class="liquid-blob blob-2"></div>
+            <div class="liquid-blob blob-3"></div>
+        </div>
+        
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center justify-center relative px-6" ref="heroSection">
+            <div class="text-center z-10">
+                <div class="hero-subtitle text-void-accent text-lg md:text-xl font-medium tracking-[0.3em] mb-6 opacity-0">
+                    {{ profileData.subtitle }}
+                </div>
+                <h1 class="hero-name text-7xl md:text-9xl lg:text-[12rem] font-black tracking-tighter mb-8 opacity-0">
+                    <span class="gradient-text">{{ profileData.name }}</span>
+                </h1>
+                <div class="hero-title text-xl md:text-3xl text-void-text/80 font-light mb-12 opacity-0">
+                    {{ profileData.title }}
+                </div>
+                <div class="hero-cta flex flex-wrap justify-center gap-4 opacity-0">
+                    <a :href="'mailto:' + profileData.email" class="group relative px-8 py-4 rounded-full glass-strong overflow-hidden transition-all duration-300 hover:scale-105">
+                        <span class="relative z-10 flex items-center gap-2 text-void-accent font-medium">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                            联系我
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-void-accent/20 to-void-purple/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </a>
+                    <a href="#experience" class="group px-8 py-4 rounded-full border border-void-text/20 hover:border-void-accent/50 transition-all duration-300 hover:scale-105">
+                        <span class="flex items-center gap-2 text-void-text/80 font-medium">
+                            <i data-lucide="briefcase" class="w-5 h-5"></i>
+                            查看经历
+                        </span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 scroll-indicator opacity-0">
+                <div class="w-6 h-10 rounded-full border-2 border-void-text/30 flex justify-center pt-2">
+                    <div class="w-1.5 h-3 bg-void-accent rounded-full animate-bounce"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Section - Bento Grid -->
+        <section class="py-32 px-6 md:px-12 lg:px-24" id="about">
+            <div class="max-w-7xl mx-auto">
+                <div class="reveal mb-16">
+                    <span class="text-void-accent text-sm font-medium tracking-[0.2em] uppercase">About Me</span>
+                    <h2 class="text-5xl md:text-6xl font-bold mt-4">教育背景</h2>
+                </div>
+                
+                <div class="bento-grid">
+                    <!-- Warwick University - Large Card -->
+                    <div class="bento-item large glass reveal">
+                        <div class="h-full flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-void-accent to-void-purple flex items-center justify-center">
+                                        <i data-lucide="graduation-cap" class="w-6 h-6 text-white"></i>
+                                    </div>
+                                    <span class="text-void-accent font-medium">硕士</span>
+                                </div>
+                                <h3 class="text-2xl md:text-3xl font-bold mb-2">{{ profileData.education.masters.school }}</h3>
+                                <p class="text-void-text/60 text-lg">{{ profileData.education.masters.major }}</p>
+                                <p class="text-void-accent/80 mt-2">{{ profileData.education.masters.period }}</p>
+                            </div>
+                            <div class="mt-6">
+                                <p class="text-void-text/70 leading-relaxed">{{ profileData.education.masters.description }}</p>
+                                <div class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-void-accent/10 text-void-accent text-sm">
+                                    <i data-lucide="trophy" class="w-4 h-4"></i>
+                                    专业排名前15%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- XJTLU - Regular Card -->
+                    <div class="bento-item glass reveal">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-void-purple to-purple-500 flex items-center justify-center">
+                                <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <span class="text-void-purple font-medium">本科</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">{{ profileData.education.bachelors.school }}</h3>
+                        <p class="text-void-text/60">{{ profileData.education.bachelors.major }}</p>
+                        <p class="text-void-purple/80 mt-2 text-sm">{{ profileData.education.bachelors.period }}</p>
+                        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-void-purple/10 text-void-purple text-xs">
+                            <i data-lucide="award" class="w-3 h-3"></i>
+                            专业前15%
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Summary -->
+                    <div class="bento-item glass reveal">
+                        <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-void-accent"></i>
+                            核心优势
+                        </h4>
+                        <div class="space-y-3">
+                            <div v-for="(strength, index) in profileData.coreStrengths" :key="index" class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-void-accent"></div>
+                                <span class="text-void-text/80 text-sm">{{ strength }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Language Skills -->
+                    <div class="bento-item glass reveal">
+                        <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <i data-lucide="languages" class="w-5 h-5 text-void-purple"></i>
+                            语言能力
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm text-void-text/80">英语 (雅思6.5)</span>
+                                    <span class="text-sm text-void-accent">流利</span>
+                                </div>
+                                <div class="h-2 bg-void-text/10 rounded-full overflow-hidden">
+                                    <div class="h-full w-[90%] bg-gradient-to-r from-void-accent to-void-purple rounded-full"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm text-void-text/80">中文</span>
+                                    <span class="text-sm text-void-accent">母语</span>
+                                </div>
+                                <div class="h-2 bg-void-text/10 rounded-full overflow-hidden">
+                                    <div class="h-full w-full bg-gradient-to-r from-void-accent to-void-purple rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="bento-item wide glass reveal">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <div class="text-center">
+                                <div class="text-4xl font-bold gradient-text mb-1">5+</div>
+                                <div class="text-void-text/60 text-sm">段实习经历</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold gradient-text mb-1">4+</div>
+                                <div class="text-void-text/60 text-sm">个项目经验</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold gradient-text mb-1">QS74</div>
+                                <div class="text-void-text/60 text-sm">华威大学</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-4xl font-bold gradient-text mb-1">95%+</div>
+                                <div class="text-void-text/60 text-sm">系统准确率</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section -->
+        <section class="py-32 px-6 md:px-12 lg:px-24" id="experience">
+            <div class="max-w-6xl mx-auto">
+                <div class="reveal mb-20">
+                    <span class="text-void-accent text-sm font-medium tracking-[0.2em] uppercase">Experience</span>
+                    <h2 class="text-5xl md:text-6xl font-bold mt-4">实习经历</h2>
+                    <p class="text-void-text/60 mt-4 text-lg max-w-2xl">从互联网大厂到咨询巨头，积累多元化的产品运营与数据分析经验</p>
+                </div>
+                
+                <div class="timeline-container">
+                    <div class="timeline">
+                        <div v-for="(exp, index) in profileData.experiences" :key="index" class="timeline-item reveal" :class="{ 'active': index === 0 }">
+                            <div class="glass rounded-2xl p-6 md:p-8">
+                                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-xl md:text-2xl font-bold">{{ exp.company }}</h3>
+                                        <p class="text-void-accent font-medium mt-1">{{ exp.position }}</p>
+                                    </div>
+                                    <span class="text-void-text/50 text-sm mt-2 md:mt-0">{{ exp.period }}</span>
+                                </div>
+                                <ul class="space-y-2">
+                                    <li v-for="(desc, dIndex) in exp.descriptions" :key="dIndex" class="flex items-start gap-3 text-void-text/70">
+                                        <i data-lucide="check-circle-2" class="w-5 h-5 text-void-accent flex-shrink-0 mt-0.5"></i>
+                                        <span class="leading-relaxed">{{ desc }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Section -->
+        <section class="py-32 px-6 md:px-12 lg:px-24" id="projects">
+            <div class="max-w-7xl mx-auto">
+                <div class="reveal mb-20">
+                    <span class="text-void-accent text-sm font-medium tracking-[0.2em] uppercase">Projects</span>
+                    <h2 class="text-5xl md:text-6xl font-bold mt-4">项目经历</h2>
+                    <p class="text-void-text/60 mt-4 text-lg max-w-2xl">从商业分析到全栈开发，用数据驱动决策，用技术实现创新</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div v-for="(project, index) in profileData.projects" :key="index" class="project-card glass reveal" :class="{ 'md:col-span-2': project.highlight }">
+                        <div class="p-8 md:p-10">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <div>
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="px-3 py-1 rounded-full bg-void-accent/10 text-void-accent text-xs font-medium">{{ project.type }}</span>
+                                        <span class="text-void-text/50 text-sm">{{ project.period }}</span>
+                                    </div>
+                                    <h3 class="text-2xl md:text-3xl font-bold">{{ project.name }}</h3>
+                                </div>
+                                <div v-if="project.achievement" class="mt-4 md:mt-0">
+                                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-void-accent/20 to-void-purple/20 text-void-accent text-sm font-medium">
+                                        <i data-lucide="award" class="w-4 h-4"></i>
+                                        {{ project.achievement }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <ul class="space-y-3 mb-6">
+                                <li v-for="(desc, dIndex) in project.descriptions" :key="dIndex" class="flex items-start gap-3 text-void-text/70">
+                                    <i data-lucide="arrow-right" class="w-5 h-5 text-void-purple flex-shrink-0 mt-0.5"></i>
+                                    <span class="leading-relaxed">{{ desc }}</span>
+                                </li>
+                            </ul>
+                            
+                            <div v-if="project.tags" class="flex flex-wrap gap-2">
+                                <span v-for="(tag, tIndex) in project.tags" :key="tIndex" class="px-3 py-1 rounded-full bg-void-text/5 text-void-text/60 text-xs">
+                                    {{ tag }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Marquee Section -->
+        <section class="py-32 overflow-hidden" id="skills">
+            <div class="px-6 md:px-12 lg:px-24 mb-16">
+                <div class="max-w-7xl mx-auto reveal">
+                    <span class="text-void-accent text-sm font-medium tracking-[0.2em] uppercase">Skills & Strengths</span>
+                    <h2 class="text-5xl md:text-6xl font-bold mt-4">技能与优势</h2>
+                </div>
+            </div>
+            
+            <!-- Software Skills -->
+            <div class="marquee-container mb-6 reveal">
+                <div class="marquee-content">
+                    <div v-for="(skill, index) in profileData.softwareSkills" :key="'s1-'+index" class="marquee-item glass-strong text-void-accent">
+                        <i data-lucide="code-2" class="w-5 h-5"></i>
+                        {{ skill }}
+                    </div>
+                    <div v-for="(skill, index) in profileData.softwareSkills" :key="'s2-'+index" class="marquee-item glass-strong text-void-accent">
+                        <i data-lucide="code-2" class="w-5 h-5"></i>
+                        {{ skill }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Personality Traits - Reverse -->
+            <div class="marquee-container mb-6 reveal">
+                <div class="marquee-content-reverse">
+                    <div v-for="(trait, index) in profileData.personalityTraits" :key="'p1-'+index" class="marquee-item glass-strong text-void-purple">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        {{ trait }}
+                    </div>
+                    <div v-for="(trait, index) in profileData.personalityTraits" :key="'p2-'+index" class="marquee-item glass-strong text-void-purple">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        {{ trait }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hobbies -->
+            <div class="marquee-container reveal">
+                <div class="marquee-content">
+                    <div v-for="(hobby, index) in profileData.hobbies" :key="'h1-'+index" class="marquee-item glass-strong text-pink-400">
+                        <i data-lucide="heart" class="w-5 h-5"></i>
+                        {{ hobby }}
+                    </div>
+                    <div v-for="(hobby, index) in profileData.hobbies" :key="'h2-'+index" class="marquee-item glass-strong text-pink-400">
+                        <i data-lucide="heart" class="w-5 h-5"></i>
+                        {{ hobby }}
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer CTA Section -->
+        <section class="min-h-[70vh] flex flex-col items-center justify-center px-6 py-32 relative" id="contact">
+            <div class="absolute inset-0 bg-gradient-to-t from-void-accent/5 to-transparent"></div>
+            
+            <div class="relative z-10 text-center max-w-5xl mx-auto">
+                <div class="reveal mb-8">
+                    <span class="text-void-accent text-sm font-medium tracking-[0.2em] uppercase">Get In Touch</span>
+                </div>
+                
+                <a :href="'mailto:' + profileData.email" class="group block reveal">
+                    <h2 class="cta-text gradient-text group-hover:text-glow transition-all duration-500">
+                        联系我
+                    </h2>
+                </a>
+                
+                <div class="reveal mt-16 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+                    <a :href="'mailto:' + profileData.email" class="group flex items-center gap-4 text-void-text/80 hover:text-void-accent transition-colors">
+                        <div class="w-14 h-14 rounded-full glass-strong flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="mail" class="w-6 h-6"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-sm text-void-text/50">邮箱</div>
+                            <div class="text-lg font-medium">{{ profileData.email }}</div>
+                        </div>
+                    </a>
+                    
+                    <a :href="'tel:' + profileData.phone" class="group flex items-center gap-4 text-void-text/80 hover:text-void-accent transition-colors">
+                        <div class="w-14 h-14 rounded-full glass-strong flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="phone" class="w-6 h-6"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-sm text-void-text/50">电话</div>
+                            <div class="text-lg font-medium">{{ profileData.phone }}</div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="reveal mt-24 pt-8 border-t border-void-text/10">
+                    <p class="text-void-text/40 text-sm">
+                        © 2026 {{ profileData.name }} · 产品运营与数据分析专家
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        
+        // ============================================
+        // 配置数据 - 可在此修改个人信息
+        // ============================================
+        const profileData = {
+            // 基本信息
+            name: "刘柯汝",
+            subtitle: "PRODUCT & DATA EXPERT",
+            title: "产品运营 · 数据分析 · AI产品",
+            email: "18918044013@163.com",
+            phone: "18918044013",
+            
+            // 核心优势
+            coreStrengths: [
+                "数据驱动决策能力",
+                "跨部门协调沟通",
+                "产品全生命周期管理",
+                "AI产品搭建经验",
+                "敏捷项目管理"
+            ],
+            
+            // 教育经历
+            education: {
+                masters: {
+                    school: "华威大学 (QS 74)",
+                    major: "电子商务管理硕士",
+                    period: "2024.09 - 2026.01",
+                    description: "主修大数据分析与优化、基于Python的数字系统开发、数字化零售运营管理。专业排名前15%。"
+                },
+                bachelors: {
+                    school: "西交利物浦大学",
+                    major: "金融英语 本科",
+                    period: "2020.09 - 2024.06",
+                    description: "主修财务会计、统计学、语言学、金融基础、数理经济学。专业排名前15%。"
+                }
+            },
+            
+            // 实习经历
+            experiences: [
+                {
+                    company: "上海回天新材料有限公司",
+                    position: "外贸事业部 · 行业经理",
+                    period: "2026.01 - 至今",
+                    descriptions: [
+                        "完成海外新材料产品端到端孵化，从立项调研到量产交付全链路跟进，实现海外市场突破",
+                        "参与海外核心客户调研，挖掘技术需求并输出定制化解决方案，新增3-5家客户",
+                        "协助制定细分市场策略，为销售团队提供技术赋能，支撑目标市场份额提升5%",
+                        "负责产品全生命周期管理，联动研发推动技术升级，客户复购率提升12%"
+                    ]
+                },
+                {
+                    company: "德勤企业管理咨询",
+                    position: "技术转型中心 · AI产品助理",
+                    period: "2025.09 - 2025.12",
+                    descriptions: [
+                        "参与AI产品后台管理系统搭建，对接业务需求，完成用户管理、模型配置等模块",
+                        "搭建三级信息资料库结构，运用数据抓取与关键词提取技术，实现高效资料调取",
+                        "负责15+条客户线系统测试，修复100+系统bug，智能平台资料调取时效提升60%",
+                        "技术参数自动填入及标书资料调取准确率达95%以上"
+                    ]
+                },
+                {
+                    company: "蚂蚁集团 · 支付宝事业群",
+                    position: "产品运营",
+                    period: "2025.08 - 2025.09",
+                    descriptions: [
+                        "收集整理支付宝业务用户反馈，运用分类模型进行问题归类与优先级排序",
+                        "参与花呗、借呗等核心功能需求文档撰写，协调设计、技术、测试等部门资源",
+                        "协助设计用户增长活动方案，提出页面交互建议，提升用户活跃度",
+                        "监控行业竞品动态，撰写产品功能对比及行业趋势分析报告"
+                    ]
+                },
+                {
+                    company: "同程网络科技",
+                    position: "旅游度假事业部 · 商务运营",
+                    period: "2023.09 - 2024.01",
+                    descriptions: [
+                        "结合旅游淡旺季收集产品信息，适配不同周期的营销活动",
+                        "负责景区产品及POI信息运营，日均处理15+景区条目，完成内容更新与价格校准",
+                        "协助5家景区谈判对接与上线落地，推动产品转化率提升10%"
+                    ]
+                },
+                {
+                    company: "绎达咨询",
+                    position: "软件开发组 · 数据分析员",
+                    period: "2022.07 - 2022.09",
+                    descriptions: [
+                        "参与国家能源国企数据融合平台调研，撰写5000字竞品分析报告",
+                        "运用Tableau完成数据分析及可视化，处理超过20篇文献及行业报告",
+                        "协助完成知识库搭建，保障产品优化迭代与项目交付进度"
+                    ]
+                }
+            ],
+            
+            // 项目经历
+            projects: [
+                {
+                    name: "百度中国 · 短视频业务商业分析项目",
+                    type: "商业分析",
+                    period: "2025.07 - 2025.08",
+                    highlight: true,
+                    descriptions: [
+                        "搭建涵盖用户侧、业务侧的核心指标体系，制作实时指标监控看板",
+                        "对核心指标进行日常监控与异动分析，推动播放量回升8%、投流ROI提升5%",
+                        "承接短视频专项AB实验需求，通过数据验证实验效果，支撑业务功能迭代决策",
+                        "运用漏斗分析、对比分析等方法，定位新用户增长与老用户留存核心痛点"
+                    ],
+                    tags: ["数据分析", "AB测试", "指标体系", "数据可视化"]
+                },
+                {
+                    name: "华威大学 · 网站开发项目",
+                    type: "全栈开发",
+                    period: "2025.03 - 2025.06",
+                    descriptions: [
+                        "独立完成华威大学短期课程全栈开发，用Figma设计前端原型",
+                        "基于Flask框架运用Python搭建后端系统，实现学生注册、课程申请等核心功能",
+                        "应用异步处理技术优化网站响应速度及高并发性能",
+                        "撰写3000+字英文技术报告，详述系统架构设计与数据库方案"
+                    ],
+                    tags: ["Python", "Flask", "Figma", "全栈开发"]
+                },
+                {
+                    name: "《光·遇》PC端优化项目",
+                    type: "数据分析",
+                    period: "2025.03 - 2025.06",
+                    achievement: "年级前十",
+                    descriptions: [
+                        "运用NLP与LDA模型分析10,000条Steam评论识别用户痛点",
+                        "构建预测模型挖掘活跃用户与付费行为驱动因素",
+                        "通过Screaming Frog提出SEO优化及用户体验提升方案"
+                    ],
+                    tags: ["NLP", "LDA模型", "SEO", "用户研究"]
+                },
+                {
+                    name: "华威大学 · 大数据整合与可视化项目",
+                    type: "数据可视化",
+                    period: "2025.03 - 2025.06",
+                    descriptions: [
+                        "针对酒店集团数据孤岛问题，调研数据湖架构并提出源数据管理方案",
+                        "运用Tableau构建多维度仪表盘，可视化展示客户评分、入住率、收益指标",
+                        "撰写3000字报告支持后端决策，为酒店运营决策提供数据支持"
+                    ],
+                    tags: ["Tableau", "数据湖", "数据可视化", "商业智能"]
+                },
+                {
+                    name: "敏捷项目管理咨询项目",
+                    type: "项目管理",
+                    period: "2025.03 - 2025.06",
+                    descriptions: [
+                        "为PlasticSolutions提供网站优化及业务升级服务，调研公司新增AI技术类产品优化业务的需求",
+                        "针对官网信息杂乱、UI混乱问题进行优化，接入Chatbase的API整合聊天机器人",
+                        "推荐引入Narrative BI工具满足客户自动化数据分析的需求，采用Scrum流程管理实现系统接入",
+                        "撰写47页解决方案PPT，从概念到原型快速迭代，实现客户驱动的快速适应"
+                    ],
+                    tags: ["Trello", "Jira", "敏捷项目管理", "Chatbase", "Narrative BI"]
+                }
+            ],
+            
+            // 软件技能
+            softwareSkills: [
+                "Python", "HTML", "Tableau", "ScreamingFrog", "WordPress", 
+                "ERP/CRM", "Trello", "Jira", "Office", "数据分析", "敏捷项目管理"
+            ],
+            
+            // 性格特质
+            personalityTraits: [
+                "系统思维", "结果导向", "善于统筹规划", "多任务管理", 
+                "资源协调能力", "数据驱动", "数字化解决方案"
+            ],
+            
+            // 兴趣爱好
+            hobbies: [
+                "街舞", "琵琶", "自媒体", "器械健身", "羽毛球"
+            ]
+        };
+        
+        createApp({
+            setup() {
+                const cursor = ref(null);
+                const cursorFollower = ref(null);
+                const heroSection = ref(null);
+                
+                // Custom Cursor Logic
+                const initCursor = () => {
+                    if (window.matchMedia('(pointer: coarse)').matches) return;
+                    
+                    const cursorEl = cursor.value;
+                    const followerEl = cursorFollower.value;
+                    
+                    let mouseX = 0, mouseY = 0;
+                    let cursorX = 0, cursorY = 0;
+                    let followerX = 0, followerY = 0;
+                    
+                    document.addEventListener('mousemove', (e) => {
+                        mouseX = e.clientX;
+                        mouseY = e.clientY;
+                    });
+                    
+                    const animate = () => {
+                        // Cursor follows immediately
+                        cursorX += (mouseX - cursorX) * 0.2;
+                        cursorY += (mouseY - cursorY) * 0.2;
+                        cursorEl.style.left = cursorX - 10 + 'px';
+                        cursorEl.style.top = cursorY - 10 + 'px';
+                        
+                        // Follower with delay
+                        followerX += (mouseX - followerX) * 0.1;
+                        followerY += (mouseY - followerY) * 0.1;
+                        followerEl.style.left = followerX - 20 + 'px';
+                        followerEl.style.top = followerY - 20 + 'px';
+                        
+                        requestAnimationFrame(animate);
+                    };
+                    animate();
+                    
+                    // Hover effect on interactive elements
+                    const interactiveElements = document.querySelectorAll('a, button, .bento-item, .timeline-item, .project-card');
+                    interactiveElements.forEach(el => {
+                        el.addEventListener('mouseenter', () => cursorEl.classList.add('hover'));
+                        el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover'));
+                    });
+                };
+                
+                // GSAP Animations
+                const initAnimations = () => {
+                    gsap.registerPlugin(ScrollTrigger);
+                    
+                    // Hero Animations
+                    const heroTl = gsap.timeline({ delay: 0.3 });
+                    
+                    heroTl.to('.hero-subtitle', {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: 'power3.out'
+                    })
+                    .to('.hero-name', {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: 'power3.out'
+                    }, '-=0.4')
+                    .to('.hero-title', {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: 'power3.out'
+                    }, '-=0.6')
+                    .to('.hero-cta', {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: 'power3.out'
+                    }, '-=0.4')
+                    .to('.scroll-indicator', {
+                        opacity: 1,
+                        duration: 0.6,
+                        ease: 'power2.out'
+                    }, '-=0.2');
+                    
+                    // Set initial states
+                    gsap.set('.hero-subtitle, .hero-name, .hero-title, .hero-cta', { y: 50 });
+                    
+                    // Scroll Reveal Animations
+                    const revealElements = document.querySelectorAll('.reveal');
+                    revealElements.forEach((el, index) => {
+                        gsap.fromTo(el, 
+                            { 
+                                opacity: 0, 
+                                y: 60 
+                            },
+                            {
+                                opacity: 1,
+                                y: 0,
+                                duration: 0.8,
+                                ease: 'power3.out',
+                                scrollTrigger: {
+                                    trigger: el,
+                                    start: 'top 85%',
+                                    toggleActions: 'play none none none'
+                                }
+                            }
+                        );
+                    });
+                    
+                    // Timeline items stagger
+                    gsap.fromTo('.timeline-item',
+                        { opacity: 0.3, x: -30 },
+                        {
+                            opacity: 1,
+                            x: 0,
+                            duration: 0.6,
+                            stagger: 0.2,
+                            ease: 'power2.out',
+                            scrollTrigger: {
+                                trigger: '.timeline',
+                                start: 'top 80%'
+                            }
+                        }
+                    );
+                    
+                    // Parallax effect for liquid blobs
+                    gsap.to('.blob-1', {
+                        y: -100,
+                        scrollTrigger: {
+                            trigger: 'body',
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: 1
+                        }
+                    });
+                    
+                    gsap.to('.blob-2', {
+                        y: 100,
+                        scrollTrigger: {
+                            trigger: 'body',
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: 1
+                        }
+                    });
+                };
+                
+                onMounted(() => {
+                    // Initialize Lucide icons
+                    lucide.createIcons();
+                    
+                    // Initialize custom cursor
+                    initCursor();
+                    
+                    // Initialize GSAP animations
+                    initAnimations();
+                });
+                
+                return {
+                    cursor,
+                    cursorFollower,
+                    heroSection,
+                    profileData
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
